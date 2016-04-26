@@ -11,10 +11,13 @@
 	<br>
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-md-8 col-md-offset-2">
+			<div class="col-md-6">
 				<div class="panel panel-default">
 					<div class="panel-body">
-						<a href="/vuejs/notes.html" class="btn btn-default pull-right"><i class="fa fa-sticky-note-o"></i>&nbsp; Notas</a>
+						<div class="pull-right">
+							<a href="/vuejs/notes.html" class="btn btn-default text-right"><i class="fa fa-sticky-note-o"></i>&nbsp; Notas</a>
+							<a href="/vuejs/bpm.html" class="btn btn-default text-right"><i class="fa fa-volume-up"></i>&nbsp; Calculadora BPM</a>
+						</div>
 						<template v-if="name">
 							<h1>{{ gender == 'm' ? 'Bienvenido' : 'Bienvenida' }} {{ name }}</h1>
 							<p>Esperamos que disfrutes tu visita</p>
@@ -86,9 +89,10 @@
 					</div>
 				</div>
 			</div>
+			<div class="col-md-6">
+				<pre>{{ $data | json }}</pre>
+			</div>
 		</div>
-		<hr>
-		<pre>{{ $data | json }}</pre>
 	</div>
 	
 	<script src="assets/js/vue.js" type="text/javascript" charset="utf-8"></script>

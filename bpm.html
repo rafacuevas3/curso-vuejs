@@ -5,16 +5,18 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>BPM</title>
 	<link rel="stylesheet" href="assets/css/bootstrap.css">
+	<link rel="stylesheet" href="assets/css/font-awesome.css">
 </head>
 <body id="app" @keyup="counter($event)">
 	<br>
 	<div class="container-fluid">
 		<div class="panel panel-default">
 			<div class="panel-body">
+				<a href="/vuejs" class="btn btn-default pull-right"><i class="fa fa-home"></i></a>
 				<h2 class="text-center">BPM counter <button type="button" class="btn btn-primary" @click="reset">Reiniciar</button></h2>
 				<h4 v-if="minute" class="text-center text-info">Conteo por minuto teminado</h4>
 				<div class="row">
-					<div class="col-md-6 col-md-offset-3">
+					<div class="col-md-6">
 						<div class="panel panel-default">
 							<div class="panel-heading">
 								<h5 class="text-center">Presiona la barra espaciadora para iniciar el conteo</h5>
@@ -26,11 +28,12 @@
 							</div>
 						</div>
 					</div>
+					<div class="col-md-6">
+						<pre>{{ $data | json }}</pre>
+					</div>
 				</div>
 			</div>
 		</div>
-		<hr>
-		<pre>{{ $data | json }}</pre>
 	</div>
 	<script src="assets/js/vue.js" type="text/javascript" charset="utf-8"></script>
 	<script>

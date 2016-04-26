@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>VueJS notes</title>
+	<title>VueJS Frases</title>
 	<link rel="stylesheet" href="assets/css/bootstrap.css">
 	<link rel="stylesheet" href="assets/css/font-awesome.css">
 	<style type="text/css" media="screen">
@@ -16,30 +16,30 @@
 	<br>
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-md-8 col-md-offset-2">
+			<div class="col-md-6">
 				<div class="panel panel-default">
 					<div class="panel-body">
 						<a href="/vuejs" class="btn btn-default pull-right"><i class="fa fa-home"></i></a>
 						<h2>Frases celebres VueJS</h2>
-						<form @submit.prevent="createNote">
+						<form @submit.prevent="createFrase">
 							<div class="form-group">
 								<label for="author">Autor:</label>
-								<input v-model="new_note.author" id="author" type="text" class="form-control"></input>
+								<input v-model="frase_nueva.author" id="author" type="text" class="form-control"></input>
 							</div>
 							<div class="form-group">
 								<label for="text">Contenido de la nota:</label>
-								<textarea v-model="new_note.text" id="text" class="form-control"></textarea>
+								<textarea v-model="frase_nueva.text" id="text" class="form-control"></textarea>
 							</div>
 							<div class="form-group">
-								<button type="submit" class="btn btn-primary">Crear nueva nota</button>
+								<button type="submit" class="btn btn-primary">Agregar frase</button>
 							</div>
 							<div class="form-group">
-								<h4>Mis notas:</h4>
+								<h4>Mis frases:</h4>
 								<ol>
-									<li v-for="note in notes" :class="{'text-primary': note.favorite}">
-										{{ note.text }} <b>{{ note.author }}</b>
-										<button type="button" class="btn btn-xs btn-default" @click.prevent="favorite(note)">
-											<i :class="{ fa:true, 'fa-star-o':!note.favorite, 'fa-star':note.favorite, favorite:note.favorite }"></i>
+									<li v-for="frase in frases" :class="{'text-primary': frase.favorite}">
+										{{ frase.text }} <b>{{ frase.author }}</b>
+										<button type="button" class="btn btn-xs btn-default" @click.prevent="favorite(frase)">
+											<i :class="{ fa:true, 'fa-star-o':!frase.favorite, 'fa-star':frase.favorite, favorite:frase.favorite }"></i>
 										</button>
 									</li>
 								</ol>
@@ -48,9 +48,10 @@
 					</div>
 				</div>
 			</div>
+			<div class="col-md-6">
+				<pre>{{ $data | json }}</pre>
+			</div>
 		</div>
-		<hr>
-		<pre>{{ $data | json }}</pre>
 	</div>
 	
 	<script src="assets/js/vue.js" type="text/javascript" charset="utf-8"></script>
@@ -58,7 +59,7 @@
 		new Vue({
 			el: "#app",
 			data: {
-				notes: [
+				frases: [
 					{
 						author: 'Aristóteles', 
 						text: 'El ignorante afirma, el sabio duda y reflexiona.',
@@ -80,16 +81,24 @@
 						favorite: false
 					}
 				],
-				new_note: { author: "", text: "", favorite:false }
+				frase_nueva: { author: "", text: "", favorite:false }
 			},
 			methods: {
-				createNote: function() {
-					this.notes.push(this.new_note);
+				createFrase: function() {
+					if (this.frase_nueva.author === "") {
+						alert('La nota no tiene autor');
+						return false;
+					}
+					if (this.frase_nueva.text === "") {
+						alert('La nota está vacia');
+						return false;
+					}
+					this.frases.push(this.frase_nueva);
 
-					this.new_note = { author: "", text: "", favorite:false };
+					this.frase_nueva = { author: "", text: "", favorite:false };
 				},
-				favorite: function(note) {
-					note.favorite = !note.favorite;
+				favorite: function(frase) {
+					frase.favorite = !frase.favorite;
 				}
 			}
 		});
