@@ -4,8 +4,8 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>VueJS demo</title>
-	<link rel="stylesheet" href="bootstrap.css">
-	<link rel="stylesheet" href="font-awesome.css">
+	<link rel="stylesheet" href="assets/css/bootstrap.css">
+	<link rel="stylesheet" href="assets/css/font-awesome.css">
 </head>
 <body id="app">
 	<br>
@@ -14,7 +14,7 @@
 			<div class="col-md-8 col-md-offset-2">
 				<div class="panel panel-default">
 					<div class="panel-body">
-						<a href="/vuejs/notes.html" class="btn btn-default pull-right"><i class="fa fa-newspaper-o"></i>&nbsp; Notas</a>
+						<a href="/vuejs/notes.html" class="btn btn-default pull-right"><i class="fa fa-sticky-note-o"></i>&nbsp; Notas</a>
 						<template v-if="name">
 							<h1>{{ gender == 'm' ? 'Bienvenido' : 'Bienvenida' }} {{ name }}</h1>
 							<p>Esperamos que disfrutes tu visita</p>
@@ -91,7 +91,7 @@
 		<pre>{{ $data | json }}</pre>
 	</div>
 	
-	<script src="vue.js" type="text/javascript" charset="utf-8"></script>
+	<script src="assets/js/vue.js" type="text/javascript" charset="utf-8"></script>
 	<script>
 		Vue.component('years-exp', {
 			template: "#years-template",
