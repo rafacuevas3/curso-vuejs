@@ -132,6 +132,11 @@
 					}
 				},
 				createTech: function() {
+					if (this.new_tech.name.trim() === "") {
+						this.new_tech.name = "";
+						alert('La tecnologia que tratas de agregar no tiene nombre');
+						return false;
+					}
 					this.techs.push(this.new_tech);
 					this.new_tech = {name: "", years: 0};
 				}
