@@ -4,36 +4,37 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>VueJS demo</title>
-	<link rel="stylesheet" href="assets/css/bootstrap.css">
-	<link rel="stylesheet" href="assets/css/font-awesome.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
 </head>
 <body id="app">
 	<br>
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-8 col-md-offset-2">
 				<div class="panel panel-default">
 					<div class="panel-body">
-						<div class="pull-right">
-							<a href="/vuejs/notes.html" class="btn btn-default text-right"><i class="fa fa-sticky-note-o"></i>&nbsp; Notas</a>
-							<a href="/vuejs/bpm.html" class="btn btn-default text-right"><i class="fa fa-volume-up"></i>&nbsp; Calculadora BPM</a>
-						</div>
-						<template v-if="name">
-							<h1>{{ gender == 'm' ? 'Bienvenido' : 'Bienvenida' }} {{ name }}</h1>
+						<template v-if="full_name">
+							<h1>{{ welcome_message }} {{ full_name }}</h1>
 							<p>Esperamos que disfrutes tu visita</p>
+							<p>Tu nombre al revés es: <b>{{ reverse_name }}</b></p>
 						</template>
-						<template v-if="!name || !age">
+						<template v-if="!full_name || !age">
 							<ul class="alert alert-danger">
-								<li v-if="!name">El campo nombre es obligatorio</li>
+								<li v-if="!full_name">El nombre es obligatorio, por favor ingresa tu nombre y/o apellido</li>
 								<li v-if="!age">El campo edad es obligatorio</li>
 							</ul>
 							<p>Por favor ingresa tu nombre...</p>
 						</template>
 						
 						<form @submit.prevent="signUp(false)">
-							<div class="form-group" :class="{'has-error': name == ''}">
-								<label for="name" class="control-label">Nombre</label>
-								<input v-model="name" type="text" placeholder="Nombre..." class="form-control">
+							<div class="form-group" :class="{'has-error': !first_name}">
+								<label for="first_name" class="control-label">Nombre</label>
+								<input v-model="first_name" type="text" placeholder="Nombre..." class="form-control">
+							</div>
+							<div class="form-group" :class="{'has-error': !last_name}">
+								<label for="last_name" class="control-label">Apellido</label>
+								<input v-model="last_name" type="text" placeholder="Nombre..." class="form-control">
 							</div>
 							<div class="form-group" :class="{'has-error': age == ''}">
 								<label for="age" class="control-label">Edad</label>
@@ -54,17 +55,24 @@
 									</label>
 								</div>
 							</div>
+							<div class="form-group">
+								<label for="spanish-checkbox">¿Hablas español?</label>
+								<input id="spanish-checkbox" type="checkbox" v-model="spanish">
+							</div>
 							<hr>
 							<h4>Nueva tecnologia</h4>
 							<div class="form-group">
-								<label for="name">Nombre de la tecnologia:</label>
+								<label for="name">Nombre de la tecnología:</label>
 								<input type="text" id="name" v-model="new_tech.name" class="form-control">
 							</div>
 							<div class="form-group">
-								<button @click.prevent="createTech" type="button" class="btn btn-primary">Agregar tecnologia</button>
+								<button @click.prevent="createTech" type="button" class="btn btn-primary">
+									<i class="fa fa-plus"></i>&nbsp;
+									Agregar tecnología
+								</button>
 							</div>
 							<hr>
-							<h3>Tecnologias</h3>
+							<h3>Tecnologías</h3>
 							<years-exp v-for="techno in techs" :years.sync="techno.years" :tech="techno.name"></years-exp>
 
 							<template id="years-template">
@@ -72,10 +80,17 @@
 								<div class="form-group">
 									Respuesta: <strong>{{ years }}</strong>
 									<button @click="add" type="button" 
-										:class="{btn: true, 'btn-primary': true, 'btn-success': years > 4}">+</button>
+										:class="{btn: true, 'btn-sm': true, 'btn-primary': true, 'btn-success': years > 5}">
+										<i class="fa fa-chevron-up"></i>
+									</button>
 									
-									<button @click="sub" :disabled="years == 0" type="button" 
-										:class="{btn:true, 'btn-primary':true, 'btn-danger': years == 0}">-</button>
+									<button @click="sub" :disabled="!years" type="button" 
+										:class="{btn: true, 'btn-sm': true, 'btn-primary': true, 'btn-danger': !years}">
+										<i class="fa fa-chevron-down"></i>
+									</button>
+								</div>
+								<div class="form-group">
+									Nivel: <strong class="text-primary">{{ nivel }}</strong>
 								</div>
 							</template>
 							
@@ -88,8 +103,7 @@
 						</form>
 					</div>
 				</div>
-			</div>
-			<div class="col-md-6">
+				<hr>
 				<pre>{{ $data | json }}</pre>
 			</div>
 		</div>
@@ -109,20 +123,51 @@
 					}
 				}
 			},
-			props: ['tech', 'years']
+			props: ['tech', 'years'],
+			computed: {
+				nivel: function() {
+					if (this.years > 5) {
+						return "Experto";
+					}
+					if (this.years > 2) {
+						return "Intermedio";
+					} else {
+						return "Principiante";
+					}
+				}
+			}
 		});
 		
 		new Vue({
 			el: "#app",
 			data: {
-				name: "Rafael",
+				first_name: "Rafael",
+				last_name: "Cuevas",
 				age: 23,
+				spanish: true,
 				gender: "m",
 				new_tech: {name: "", years: 0},
 				techs: [
 					{ name: "PHP", years: 0 },
 					{ name: "JS", years: 0 },
 				]
+			},
+			computed: {
+				full_name: function() {
+					if (this.first_name || this.last_name) {
+						return this.first_name + ' ' + this.last_name;
+					}
+					return "";
+				},
+				reverse_name: function() {
+					return this.full_name.split('').reverse().join('')
+				},
+				welcome_message: function() {
+					if (this.spanish) {
+						return this.gender == 'm' ? 'Bienvenido' : 'Bienvenida';
+					}
+					return "Welcome";
+				}
 			},
 			methods: {
 				signUp: function(logout) {

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>VueJS demo</title>
+    <link rel="stylesheet" href="assets/css/bootstrap.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.css">
+  </head>
+  <body>
+    <br>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <button type="button" :class="{btn:true, 'btn-default': !editable, 'btn-success': editable}" @click.prevent="evaluateEditable">
+                <i class="fa fa-pencil"></i>&nbsp; {{ editable ? "Deshabilitar" : "Habilitar" }} edición
+              </button>
+              <br><br>
+              <div class="sortable-directive" v-sortable data-item="pedidos" data-selector=".pedidos-item">
+                <div class="pedidos-item" v-for="pedido in pedidos" data-index="{{ $index }}">
+                  <p>Pedido <b>{{ pedido.po }}</b>, fecha de entrega: <b>{{ pedido.date }}</b></p>
+                  
+                  <div class="panel-group sortable-directive" id="accordion-{{ pedido.po }}" role="tablist" aria-multiselectable="true" 
+                    v-sortable data-item="pedidos[{{ $index }}].combos" data-selector=".combos-item-{{ $index }}">
+                    
+                    <div class="panel panel-default combos-item-{{ $parent.$index }}" 
+                    v-for="panel in pedido.combos" data-index="{{ $index }}">
+
+                      <div class="panel-heading" role="tab" role="button" data-toggle="collapse" data-parent="#accordion-{{ pedido.po }}" href="#panel{{ panel.id }}" aria-expanded="true" aria-controls="panel{{ panel.id }}">
+                        <h4 class="panel-title">{{ panel.title }}</h4>
+                      </div>
+                      <div id="panel{{ panel.id }}" class="panel-collapse collapse" role="tabpanel">
+                        <div class="panel-body">
+                          {{ panel.content }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <pre>{{ $data | json }}</pre>
+        </div>
+    </div>
+  </div>
+  <script src="assets/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+  <script src="assets/js/jquery-ui.js" type="text/javascript" charset="utf-8"></script>
+  <script src="assets/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+  <script src="assets/js/vue.js" type="text/javascript" charset="utf-8"></script>
+  <script type="text/javascript">
+    // $('#pedidos, .sortable, .panel-group').sortable({ 
+    //   stop: function( event, ui ) { 
+    //     ui.item.effect('highlight',{color:'#FFFFA1'}, 1000); 
+    //   }
+    // });
+    // $('#pedidos, .sortable, .panel-group').sortable("disable");
+
+    Vue.directive('sortable', {
+      bind: function() {
+        var vm  = this.vm;
+        var $el = $(this.el);
+        var $editable = vm.editable;
+
+        $el.sortable({
+          stop: function(event, ui) {
+            ui.item.effect('highlight',{color:'#FFFFA1'}, 1000); 
+            vm.$emit('sortableStop', $el.data('item'), $el.data('selector'));
+          },
+          cursor: 'move'
+        });
+
+        $el.sortable("disable");
+      }
+    });
+    var vo = new Vue({
+      el: 'body',
+      data: {
+        editable: false,
+        pedidos: [
+          { po: "PO43247", date: "2016-04-23", combos: [
+            { id: "PO43247-1", title: "Panel 1", content: "Lorem ipsum dolor sit amet, consectetur." },
+            { id: "PO43247-2", title: "Panel 2", content: "Lorem ipsum dolor sit amet, consectetur." },
+          ] },
+          { po: "PO43459", date: "2016-04-27", combos: [
+            { id: "PO43459-1", title: "Panel 1", content: "Lorem ipsum dolor sit amet, consectetur." },
+            { id: "PO43459-2", title: "Panel 2", content: "Lorem ipsum dolor sit amet, consectetur." },
+            { id: "PO43459-3", title: "Panel 3", content: "Lorem ipsum dolor sit amet, consectetur." },
+          ] },
+          { po: "PO44535", date: "2016-04-30", combos: [
+            { id: "PO44535-1", title: "Panel 1", content: "Lorem ipsum dolor sit amet, consectetur." },
+            { id: "PO44535-2", title: "Panel 2", content: "Lorem ipsum dolor sit amet, consectetur." },
+            { id: "PO44535-3", title: "Panel 3", content: "Lorem ipsum dolor sit amet, consectetur." },
+            { id: "PO44535-4", title: "Panel 4", content: "Lorem ipsum dolor sit amet, consectetur." },
+          ] },
+        ]
+      },
+      methods: {
+        evaluateEditable: function() {
+          this.editable = !this.editable;
+          if (this.editable) {
+            $('.sortable-directive').sortable("enable");
+          } else {
+            $('.sortable-directive').sortable("disable");
+          }
+        }
+      },
+      events: {
+        sortableStop: function(name, selector) {
+          var oldArray = vo.$get(name);
+          var newArray = [];
+          
+          $(this.$el).find(selector).each(function() {
+            var index = parseInt($(this).attr('data-index'), 10);
+            newArray.push(oldArray[index]);
+          });
+          
+          vo.$set(name, newArray);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
